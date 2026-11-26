@@ -42,7 +42,7 @@ docker build -t jiadian .
 docker run -p 8000:8000 jiadian
 ```
 
-## 🤔 为什么不能直接问通用大模型
+## 🤔 为什么不用通用大模型直接问
 
 通用模型会说「可能是压缩机问题,建议联系售后」。它不会告诉你这台还值不值得修,也不会替你问价。差别在四点:
 
@@ -106,7 +106,7 @@ python -m jiadian --json diagnose --text "..."
 python -m jiadian --mock diagnose --text "..."
 ```
 
-## 🔌 模型配置
+## 🔌 模型接入
 
 兼容 **OpenAI `/chat/completions`** 的任意服务:
 
@@ -182,6 +182,6 @@ python -m unittest discover tests -v
 
 shiyi · GitHub [@wushiyi105-jpg](https://github.com/wushiyi105-jpg) · [wushiyi105@gmail.com](mailto:wushiyi105@gmail.com)
 
-## 📄 许可
+## 📄 License
 
 [MIT](./LICENSE)

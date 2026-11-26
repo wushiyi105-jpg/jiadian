@@ -5,7 +5,7 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "jiadian"
 version = "0.1.0"
-description = "家电维修决策 Agent —— 故障树自查、保修判断、修还是换"
+description = "家电 · 报修诊断 · 故障树自查、保修判断、修还是换"
 requires-python = ">=3.10"
 license = {text = "MIT"}
 
