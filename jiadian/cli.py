@@ -47,7 +47,9 @@ def render(r):
         lines.append("  · %s:%d–%d 元" % (i["cause"], i["low"], i["high"]))
     lines.append("  合计参考:%d–%d 元" % (e["low"], e["high"]))
     if r["new_price"]:
-        lines.append("  新机价 %d 元,残值约 %s 元" % (r["new_price"], r["residual"]))
+        res = r["residual"]
+        lines.append("  新机价 %d 元,残值约 %s 元"
+                     % (r["new_price"], ("%d" % res) if res else "算不出(缺购机年份)"))
     lines.append("")
 
     d = r["decision"]
@@ -88,8 +90,12 @@ def render(r):
 
 def _text(args):
     if args.file:
-        with open(args.file, encoding="utf-8") as f:
-            return f.read()
+        try:
+            with open(args.file, encoding="utf-8") as f:
+                return f.read()
+        except OSError as e:
+            print("❌ 读不到文件 %s:%s" % (args.file, e.strerror or e), file=sys.stderr)
+            sys.exit(2)
     if args.text:
         return args.text
     if not sys.stdin.isatty():

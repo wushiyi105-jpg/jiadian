@@ -11,3 +11,8 @@
 - 报修话术与报修前 6 项体检
 - 模型只写解释与追问，费用由本地计算并经 strip_money 替换
 - Web 单页 + CLI 双入口，无 key 走离线模式
+- 4 份真实描述（业主群、微信、租客报修、电话口述）与对应输出，落在 `examples/`
+- 集成测试：真起 HTTP 服务、真调子进程 CLI、真按本仓 schema 回一次模型；测试数 27 → 45
+- GHCR 多架构镜像（amd64/arm64），tag 出 `0.1.0` / `0.1` / `latest`
+- 修 #3 残值未知时 `None` 被印成「残值约 None 元」；修 #4 未知 POST 路径不读 body 导致 Windows 10053；修 #5 `--file` 打错路径抛栈
+- 问题与测试的对应关系见 `docs/regression-map.md`

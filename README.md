@@ -166,8 +166,32 @@ jiadian/
 │   ├── cli.py      # diagnose / faults / warranty / history / web
 │   └── web.py      # 单页 + JSON API
 ├── data/faults.json  # 10 类故障树 + 保修口径
-├── tests/test_jiadian.py
+├── examples/         # 4 份真实描述 + 对应输出
+├── tests/
+│   ├── test_jiadian.py       # 规则层单测
+│   └── test_integration.py   # HTTP / 模型层 / CLI 三条链路
+├── docs/regression-map.md    # 问题 → 测试名对照
 └── assets/demo.gif
+```
+
+## 📂 真实示例
+
+`examples/` 四份都是照抄的原话，不是编的：
+
+| 文件 | 场景 | 分支 |
+| --- | --- | --- |
+| `case-01.txt` | 业主群：客厅挂机五年不制冷，外机噪音大 | 过保 → 换新（修 600 已超残值 146） |
+| `case-02.txt` | 微信里发给师傅：冰箱化冻，2023 年买 | 主要部件在保 → 先走保修 |
+| `case-03.txt` | 租客报修：洗衣机不排水还漏水，去年买 | 整机在保 → 先走保修 |
+| `case-04.txt` | 电话口述：燃气热水器打不着火，发票丢了 | 保修未知 + 燃气安全禁忌 |
+
+命令行跑一遍就出 `examples/out/case-0N.md`，可直接对照。重新生成：
+
+```bash
+for f in examples/case-0*.txt; do
+  n=$(basename "$f" .txt)
+  python -m jiadian --mock diagnose --file "$f" > "examples/out/$n.md"
+done
 ```
 
 ## ✅ 测试
@@ -176,7 +200,8 @@ jiadian/
 python -m unittest discover tests -v
 ```
 
-27 个单测只测本地逻辑:家电识别、自查排序、购机年份三种写法、在保/过保/压缩机、估价区间、残值下限、三条结论线、话术要素、体检项、离线全流程、金额剥离。CI 在 3.10/3.11/3.12 上跑。
+45 个测试分两层：27 个单测只测本地逻辑（家电识别、自查排序、购机年份三种写法、在保/过保/压缩机、估价区间、残值下限、三条结论线、话术要素、体检项、离线全流程、金额剥离），18 个集成测试真起 HTTP 服务、真调子进程 CLI、真按本仓 schema 回一次模型。CI 在 3.10/3.11/3.12 上跑。
+
 
 ## 👤 作者
 

@@ -81,7 +81,7 @@ $('#btn').onclick=async()=>{
     h+='<h3>维修估价</h3><div class="box">';
     r.estimate.items.forEach(i=>{h+=esc(i.cause)+':'+i.low+'–'+i.high+' 元\\n';});
     h+='合计参考:'+r.estimate.low+'–'+r.estimate.high+' 元';
-    if(r.new_price){h+='\\n新机价 '+r.new_price+' 元,残值约 '+r.residual+' 元';}
+    if(r.new_price){h+='\\n新机价 '+r.new_price+' 元,残值约 '+(r.residual==null?'算不出(缺购机年份)':r.residual)+' 元';}
     h+='</div>';
     h+='<h3>修还是换</h3><div class="item"><b>'+esc(r.decision.verdict)+'</b><div class="hint">'+esc(r.decision.why)+'</div></div>';
     h+='<h3>安全禁忌</h3><ul>';r.safety.forEach(s=>h+='<li class="bad">'+esc(s)+'</li>');h+='</ul>';
@@ -137,6 +137,14 @@ def _handler(db, cfg, force_mock):
 
         def do_POST(self):
             if urlparse(self.path).path != "/api/diagnose":
+                # 先把请求体吃掉再回 404:留着不读就关连接,Windows 上会发 RST,
+                # 客户端可能在读到响应前就收到「连接被重置」。
+                try:
+                    left = int(self.headers.get("Content-Length", 0) or 0)
+                    if left:
+                        self.rfile.read(left)
+                except (OSError, ValueError):
+                    pass
                 self._json({"error": "not found"}, 404)
                 return
             try:
